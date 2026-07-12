@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lampu Tap — Game Refleks Neon Arcade</title>
+<meta name="description" content="Lampu Tap: tap lampu neon sebelum padam. Game refleks arcade gratis untuk Android oleh Kidaku.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='36' fill='none' stroke='%2300f5ff' stroke-width='10'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Monoton&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg-0:#05040f;
+  --bg-1:#0d0b2a;
+  --cyan:#00f5ff;
+  --magenta:#ff2ec4;
+  --yellow:#ffe600;
+  --ink:#b9b7d9;
+  --ink-bright:#f0effc;
+  --line:rgba(185,183,217,.16);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg-0);
+  color:var(--ink);
+  font-family:"Space Grotesk",system-ui,sans-serif;
+  font-size:17px;
+  line-height:1.7;
+  overflow-x:hidden;
+}
+::selection{background:var(--magenta);color:#fff}
+
+/* ---------- HERO: papan neon ---------- */
+.hero{
+  position:relative;
+  min-height:100svh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:48px 24px 120px;
+  background:linear-gradient(180deg,var(--bg-0) 0%,var(--bg-1) 78%,#1a0f38 100%);
+  overflow:hidden;
+}
+/* bintang */
+.hero::before{
+  content:"";
+  position:absolute;inset:0;
+  background-image:
+    radial-gradient(1.5px 1.5px at 12% 18%,rgba(255,255,255,.8),transparent),
+    radial-gradient(1px 1px at 28% 42%,rgba(255,255,255,.55),transparent),
+    radial-gradient(1.5px 1.5px at 44% 12%,rgba(255,255,255,.7),transparent),
+    radial-gradient(1px 1px at 61% 33%,rgba(255,255,255,.5),transparent),
+    radial-gradient(2px 2px at 74% 15%,rgba(255,255,255,.85),transparent),
+    radial-gradient(1px 1px at 86% 45%,rgba(255,255,255,.6),transparent),
+    radial-gradient(1.5px 1.5px at 92% 24%,rgba(255,255,255,.7),transparent),
+    radial-gradient(1px 1px at 8% 55%,rgba(255,255,255,.4),transparent);
+  pointer-events:none;
+}
+/* lantai grid synthwave */
+.grid-floor{
+  position:absolute;
+  left:-25%;right:-25%;bottom:-2px;
+  height:34%;
+  background:
+    repeating-linear-gradient(90deg,rgba(255,46,196,.35) 0 2px,transparent 2px 90px),
+    repeating-linear-gradient(0deg,rgba(255,46,196,.35) 0 2px,transparent 2px 60px),
+    linear-gradient(180deg,rgba(255,46,196,.12),rgba(13,11,42,0));
+  transform:perspective(420px) rotateX(62deg);
+  transform-origin:top center;
+  border-top:2px solid rgba(0,245,255,.55);
+  box-shadow:0 -6px 32px rgba(0,245,255,.25);
+  pointer-events:none;
+}
+.eyebrow{
+  letter-spacing:.35em;
+  text-transform:uppercase;
+  font-size:.78rem;
+  color:var(--cyan);
+  margin-bottom:28px;
+}
+.wordmark{
+  font-family:"Monoton",cursive;
+  font-weight:400;
+  font-size:clamp(3rem,11vw,7.5rem);
+  line-height:1.05;
+  color:#fff;
+  text-shadow:
+    0 0 6px #fff,
+    0 0 18px var(--cyan),
+    0 0 42px var(--cyan),
+    0 0 90px rgba(0,245,255,.6);
+}
+.wordmark .row-2{
+  display:block;
+  color:#fff;
+  text-shadow:
+    0 0 6px #fff,
+    0 0 18px var(--magenta),
+    0 0 42px var(--magenta),
+    0 0 90px rgba(255,46,196,.6);
+}
+/* huruf koslet */
+.flicker{animation:flicker 4.2s infinite}
+@keyframes flicker{
+  0%,86%,90%,94%,100%{opacity:1}
+  87%,91%{opacity:.18;text-shadow:none}
+  92%{opacity:.65}
+}
+.tagline{
+  margin:34px auto 0;
+  max-width:34ch;
+  font-size:1.2rem;
+  color:var(--ink-bright);
+}
+.tagline em{color:var(--yellow);font-style:normal}
+.cta-row{
+  margin-top:44px;
+  display:flex;
+  gap:18px;
+  flex-wrap:wrap;
+  justify-content:center;
+  position:relative;
+  z-index:2;
+}
+.btn{
+  display:inline-block;
+  padding:16px 34px;
+  border-radius:16px;
+  font-weight:700;
+  font-size:1rem;
+  letter-spacing:.04em;
+  text-decoration:none;
+  border:2px solid var(--cyan);
+  color:var(--cyan);
+  background:rgba(5,4,15,.75);
+  transition:background .18s,color .18s,box-shadow .18s,transform .12s;
+}
+.btn:hover{background:rgba(0,245,255,.14);box-shadow:0 0 22px rgba(0,245,255,.45);transform:translateY(-2px)}
+.btn:focus-visible{outline:3px solid var(--yellow);outline-offset:3px}
+.btn-ghost{border-color:var(--magenta);color:var(--magenta)}
+.btn-ghost:hover{background:rgba(255,46,196,.14);box-shadow:0 0 22px rgba(255,46,196,.45)}
+.store-note{margin-top:14px;font-size:.85rem;color:rgba(185,183,217,.6)}
+
+/* ---------- DEMO RING ---------- */
+.demo{
+  position:relative;
+  margin-top:64px;
+  z-index:2;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:10px;
+}
+#ring{
+  width:120px;height:120px;
+  border:10px solid var(--yellow);
+  border-radius:50%;
+  cursor:pointer;
+  box-shadow:0 0 14px var(--yellow),inset 0 0 14px rgba(255,230,0,.5);
+  animation:shrink 1.8s linear infinite;
+  background:transparent;
+  padding:0;
+}
+#ring:focus-visible{outline:3px solid var(--cyan);outline-offset:6px}
+@keyframes shrink{
+  0%{transform:scale(.35);opacity:0}
+  12%{transform:scale(1.06);opacity:1}
+  18%{transform:scale(1)}
+  100%{transform:scale(.18);opacity:.25}
+}
+.demo-label{font-size:.85rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(185,183,217,.65)}
+#demo-score{color:var(--yellow);font-weight:700}
+
+/* ---------- SECTIONS ---------- */
+main{max-width:840px;margin:0 auto;padding:0 24px}
+section{padding:88px 0;border-top:1px solid var(--line)}
+h2{
+  font-size:1.9rem;
+  font-weight:700;
+  color:var(--ink-bright);
+  margin-bottom:8px;
+}
+.h2-neon{color:var(--cyan);text-shadow:0 0 18px rgba(0,245,255,.5)}
+.section-sub{color:rgba(185,183,217,.7);margin-bottom:36px}
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:20px}
+.rule{
+  border:1px solid var(--line);
+  border-radius:20px;
+  padding:26px 24px;
+  background:linear-gradient(180deg,rgba(13,11,42,.9),rgba(5,4,15,.9));
+}
+.rule strong{display:block;font-size:1.06rem;color:var(--ink-bright);margin-bottom:8px}
+.rule .dot{
+  display:inline-block;width:14px;height:14px;border-radius:50%;
+  margin-right:10px;vertical-align:baseline;
+}
+.dot-cyan{background:var(--cyan);box-shadow:0 0 10px var(--cyan)}
+.dot-magenta{background:var(--magenta);box-shadow:0 0 10px var(--magenta)}
+.dot-yellow{background:var(--yellow);box-shadow:0 0 10px var(--yellow)}
+.rule p{font-size:.95rem}
+
+/* ---------- PRIVACY ---------- */
+.privacy h3{
+  color:var(--ink-bright);
+  font-size:1.15rem;
+  margin:34px 0 10px;
+}
+.privacy p{margin-bottom:14px}
+.privacy .meta{font-size:.88rem;color:rgba(185,183,217,.6)}
+.lang-divider{
+  margin:52px 0 42px;
+  text-align:center;
+  letter-spacing:.3em;
+  text-transform:uppercase;
+  font-size:.78rem;
+  color:var(--magenta);
+}
+.privacy a{color:var(--cyan)}
+
+/* ---------- FOOTER ---------- */
+footer{
+  border-top:1px solid var(--line);
+  padding:44px 24px 56px;
+  text-align:center;
+  font-size:.9rem;
+  color:rgba(185,183,217,.55);
+}
+footer .mark{
+  font-family:"Monoton",cursive;
+  font-size:1.1rem;
+  color:var(--cyan);
+  text-shadow:0 0 12px rgba(0,245,255,.6);
+  display:block;
+  margin-bottom:10px;
+}
+
+@media (prefers-reduced-motion:reduce){
+  .flicker{animation:none}
+  #ring{animation:none;transform:scale(1)}
+  html{scroll-behavior:auto}
+}
+@media (max-width:520px){
+  section{padding:64px 0}
+  .cta-row{flex-direction:column;align-items:stretch}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <p class="eyebrow">Kidaku · Game Android</p>
+  <h1 class="wordmark" aria-label="Lampu Tap">
+    LAMP<span class="flicker">U</span><span class="row-2">TAP</span>
+  </h1>
+  <p class="tagline">Lampu neon menyala lalu meredup. <em>Tap sebelum padam</em> — makin lama makin cepat, makin kecil, makin banyak.</p>
+  <div class="cta-row">
+    <a class="btn" href="#" aria-disabled="true">Download di Google Play</a>
+    <a class="btn btn-ghost" href="#privacy">Kebijakan Privasi</a>
+  </div>
+  <p class="store-note">Tautan Google Play aktif setelah game rilis.</p>
+
+  <div class="demo">
+    <button id="ring" aria-label="Coba tap lingkarannya"></button>
+    <p class="demo-label">Coba di sini — kena: <span id="demo-score">0</span></p>
+  </div>
+
+  <div class="grid-floor" aria-hidden="true"></div>
+</header>
+
+<main>
+  <section id="cara-main">
+    <h2 class="h2-neon">Cara Main</h2>
+    <p class="section-sub">Satu jari cukup. Refleksmu yang diuji.</p>
+    <div class="rules">
+      <div class="rule">
+        <strong><span class="dot dot-cyan"></span>Tap sebelum padam</strong>
+        <p>Lampu muncul di posisi acak dan terus mengecil. Kena = poin. Lampu yang padam tanpa ditap dihitung miss — tiga kali miss, game over.</p>
+      </div>
+      <div class="rule">
+        <strong><span class="dot dot-yellow"></span>Jaga combo</strong>
+        <p>Tap beruntun menaikkan multiplier: combo 5 memberi x2, combo 10 memberi x3, combo 20 memberi x5. Tap meleset ke area kosong tidak mengurangi nyawa, tapi combomu putus.</p>
+      </div>
+      <div class="rule">
+        <strong><span class="dot dot-magenta"></span>Zona multi lampu</strong>
+        <p>Lewati skor 300 dan lampu mulai menyala dua sekaligus; di skor 800, tiga sekaligus. Sampai mana refleksmu bertahan?</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="privacy" class="privacy">
+    <h2>Kebijakan Privasi</h2>
+    <p class="meta">Berlaku sejak: 12 Juli 2026 · Aplikasi: Lampu Tap · Pengembang: Kidaku</p>
+
+    <h3>Ringkasnya</h3>
+    <p><strong>Lampu Tap tidak mengumpulkan, menyimpan, ataupun membagikan data pribadi apa pun.</strong> Game ini berjalan sepenuhnya offline dan tidak menampilkan iklan.</p>
+
+    <h3>Data yang dikumpulkan</h3>
+    <p>Tidak ada. Lampu Tap tidak meminta izin khusus, tidak mengakses akun, kontak, lokasi, kamera, mikrofon, maupun penyimpanan di luar datanya sendiri, dan tidak mengirim informasi apa pun ke server mana pun.</p>
+
+    <h3>Penyimpanan lokal</h3>
+    <p>Skor tertinggi dan statistik permainan (combo terbaik serta jumlah permainan) disimpan hanya di perangkatmu, di ruang penyimpanan privat milik aplikasi. Data ini tidak pernah meninggalkan perangkat dan terhapus otomatis saat aplikasi di-uninstall.</p>
+
+    <h3>Layanan pihak ketiga</h3>
+    <p>Lampu Tap tidak menggunakan SDK analitik, jaringan iklan, maupun layanan pihak ketiga lain yang memproses data pengguna.</p>
+
+    <h3>Privasi anak</h3>
+    <p>Karena tidak ada data yang dikumpulkan dari siapa pun, tidak ada pula data yang dikumpulkan dari anak-anak. Game ini aman dimainkan segala usia.</p>
+
+    <h3>Perubahan kebijakan</h3>
+    <p>Jika kebijakan ini berubah (misalnya pada pembaruan game di masa depan), versi terbaru akan selalu dipublikasikan di halaman ini beserta tanggal berlakunya.</p>
+
+    <h3>Kontak</h3>
+    <p>Pertanyaan seputar kebijakan ini bisa dikirim ke <a href="mailto:EMAIL_KAMU@example.com">EMAIL_KAMU@example.com</a>.</p>
+
+    <p class="lang-divider">English version</p>
+
+    <h3>Privacy Policy — Lampu Tap</h3>
+    <p class="meta">Effective date: July 12, 2026 · App: Lampu Tap · Developer: Kidaku</p>
+    <p><strong>Lampu Tap does not collect, store, or share any personal data.</strong> The game runs fully offline and contains no ads.</p>
+    <p>No permissions are requested and no information is sent to any server. Your high score and play statistics are saved only on your device, inside the app's private storage, and are removed when the app is uninstalled. The game uses no analytics SDKs, ad networks, or other third-party services that process user data. Since no data is collected from anyone, no data is collected from children either.</p>
+    <p>If this policy ever changes, the updated version will be published on this page. Questions: <a href="mailto:EMAIL_KAMU@example.com">EMAIL_KAMU@example.com</a>.</p>
+  </section>
+</main>
+
+<footer>
+  <span class="mark">KIDAKU</span>
+  © 2026 Kidaku · Lampu Tap · Dibuat dengan Godot Engine
+</footer>
+
+<script>
+// Mini demo: tap ringnya, skor naik, ring respawn dengan warna lain.
+(function(){
+  var ring = document.getElementById("ring");
+  var scoreEl = document.getElementById("demo-score");
+  var colors = ["#ffe600","#00f5ff","#ff2ec4","#39ff14"];
+  var i = 0, score = 0;
+  ring.addEventListener("click", function(){
+    score++;
+    scoreEl.textContent = score;
+    i = (i + 1) % colors.length;
+    var c = colors[i];
+    ring.style.borderColor = c;
+    ring.style.boxShadow = "0 0 14px " + c + ", inset 0 0 14px " + c;
+    // restart animasi shrink
+    ring.style.animation = "none";
+    void ring.offsetWidth;
+    ring.style.animation = "";
+  });
+})();
+</script>
+
+</body>
+</html>
